@@ -1,6 +1,7 @@
 import sublime, sublime_plugin, tempfile, os, subprocess
 
 connection = None
+debug = sublime.load_settings("SQLExec.sublime-settings").get('sql_exec.debug')
 history = ['']
 
 class Connection:
@@ -83,6 +84,8 @@ class Command:
 
     def run(self):
         sublime.status_message(' SQLExec: running SQL command')
+        if debug:
+            sublime.message_dialog('Command: ' + str(self.text))
         results, errors = subprocess.Popen(self.text, stdout=subprocess.PIPE,stderr=subprocess.PIPE, shell=True).communicate()
 
         if not results and errors:
